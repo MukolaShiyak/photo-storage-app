@@ -11,7 +11,7 @@ class PageLayout extends StatelessWidget {
   final AppBarWidget? appBar;
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
-  const PageLayout({ 
+  const PageLayout({
     super.key,
     required this.child,
     this.appBar,
@@ -50,10 +50,11 @@ class PageLayout extends StatelessWidget {
                 ),
                 BlocBuilder<AuthBloc, ProfileState>(
                   builder: (context, state) {
-                    if (state.status == ProfileStateStatus.loading)
-                      return ApiLoader();
-                    else
-                      return SizedBox();
+                    if (state.status == ProfileStateStatus.loading) {
+                      return const ApiLoader();
+                    } else {
+                      return const SizedBox();
+                    }
                   },
                 ),
               ],

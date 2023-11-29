@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class StandartCustomButton extends StatelessWidget {
   final String label;
-  final void Function() onPressed;
+  final VoidCallback onPressed;
   final Size? minumalSize;
   const StandartCustomButton({
     Key? key,

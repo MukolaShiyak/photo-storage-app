@@ -55,9 +55,7 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
       child: BlocListener<AuthBloc, ProfileState>(
         listener: (context, state) {
-          if (
-              // state is ProfileStateHasData
-              state.profile != null) {
+          if (state.profile != null) {
             Navigator.of(context).pushReplacementNamed(Routes.homeScreen);
           }
         },

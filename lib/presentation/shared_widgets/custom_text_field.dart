@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+typedef ValidationCallback = String? Function(String?)?;
+
 class CustomTextField extends StatefulWidget {
-  final String? Function(String?)? validator;
+  final ValidationCallback validator;
   final String? label;
   final TextInputAction? fieldAction;
   final TextEditingController? controller;

@@ -25,19 +25,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // List<File> selectedImages = [];
   int imageLenght = 0;
   late StreamProgressIndicator _progressStream;
-
-  var _isUploading = false;
 
   final storage = locator.get<FlutterSecureStorage>();
   final _filePickerService = locator.get<IFilePickerService>();
 
+  void _clearImageCount() => setState(() => imageLenght = 0);
+
   @override
   Widget build(BuildContext context) {
-    print('profileStatus: ${context.read<AuthBloc>().state.status}');
-    print('photoStatus: ${context.read<PhotoStorageBloc>().state.status}');
     return PageLayout(
       appBar: AppBarWidget(
         title: 'Home Screen',
@@ -52,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
         listeners: [
           BlocListener<AuthBloc, ProfileState>(
             listener: (context, state) {
-              print('profileStatus: ${state.status}');
               if (state.profile == null ||
                   (state.profile?.email != null &&
                       state.profile!.email.isEmpty)) {
@@ -62,19 +58,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BlocListener<PhotoStorageBloc, PhotoStorageState>(
             listener: (context, state) {
-              if (state.status == PhotoStorageStatus.loading
-                  // status is PhotoStorageStateLoading
-                  ) {
+              if (state.status == PhotoStorageStatus.failure ||
+                  state.status == PhotoStorageStatus.success) {
                 setState(() {
-                  _isUploading = true;
-                });
-              } else if (state.status == PhotoStorageStatus.failure ||
-                      state.status == PhotoStorageStatus.success
-                  // state is PhotoStorageStateError ||
-                  //   state is PhotoStorageStateHasData
-                  ) {
-                setState(() {
-                  _isUploading = false;
                   _progressStream.counterStream.close();
                 });
               }
@@ -94,23 +80,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           await _filePickerService.pickMultiFiles();
 
                       if (result != null) {
-                        // List<File> files =
-                        //     result.paths.map((path) => File(path!)).toList();
-
-                        // selectedImages = files;
                         imageLenght = result.files.length;
 
                         _progressStream = StreamProgressIndicator();
 
                         if (context.mounted) {
                           context.read<PhotoStorageBloc>().add(OnUploadPhotos(
-                                // photos: selectedImages,
                                 photos: result,
                                 streamProgress: _progressStream,
+                                clearImageCount: _clearImageCount,
                               ));
                         }
-
-                        // print('files:212 ${result.paths}');
                       }
 
                       setState(() {});
@@ -121,8 +101,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     'photos: $imageLenght',
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  if (_isUploading)
-                    UploadProgressIndicator(progressStream: _progressStream),
+                  BlocBuilder<PhotoStorageBloc, PhotoStorageState>(
+                    builder: (context, state) {
+                      if (state.status == PhotoStorageStatus.loading) {
+                        return UploadProgressIndicator(
+                            progressStream: _progressStream);
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
                 ],
               ),
             ),

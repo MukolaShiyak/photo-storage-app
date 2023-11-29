@@ -2,41 +2,6 @@ import '/domain/entities/profile_entity.dart';
 
 import 'package:equatable/equatable.dart';
 
-// abstract class ProfileState extends Equatable {
-//   const ProfileState();
-
-//   @override
-//   List<Object?> get props => [];
-
-//   Profile get getProfile =>
-//       const Profile(email: '', firstName: '', lastName: '', userId: '');
-// }
-
-// class ProfileStateEmpty extends ProfileState {}
-
-// class ProfileStateLoading extends ProfileState {}
-
-// class ProfileStateError extends ProfileState {
-//   final String message;
-
-//   const ProfileStateError(this.message);
-
-//   @override
-//   List<Object?> get props => [message];
-// }
-
-// class ProfileStateHasData extends ProfileState {
-//   final Profile profile;
-
-//   const ProfileStateHasData(this.profile);
-
-//   @override
-//   List<Object?> get props => [profile];
-
-//   @override
-//   Profile get getProfile => profile;
-// }
-
 enum ProfileStateStatus { initial, loading, success, failure }
 
 final class ProfileState extends Equatable {

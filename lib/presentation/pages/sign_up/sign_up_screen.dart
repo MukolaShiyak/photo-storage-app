@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:photo_uploader/presentation/shared_widgets/auth_navigation_button.dart';
 
 import '/routes.dart';
 import '/presentation/bloc/profile_state.dart';
@@ -10,6 +9,7 @@ import '/presentation/bloc/auth_bloc/auth_bloc.dart';
 import '/presentation/bloc/auth_bloc/auth_event.dart';
 import '/presentation/shared_widgets/page_layout.dart';
 import '/presentation/pages/sign_up/widgets/sign_up_fields.dart';
+import '/presentation/shared_widgets/auth_navigation_button.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({
@@ -68,9 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       child: BlocListener<AuthBloc, ProfileState>(
         listener: (context, state) {
-          if (
-              // state is ProfileStateHasData
-              state.profile != null) {
+          if (state.profile != null) {
             Navigator.of(context).pushReplacementNamed(Routes.homeScreen);
           }
         },

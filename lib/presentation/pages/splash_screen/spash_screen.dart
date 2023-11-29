@@ -19,7 +19,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final storage = locator.get<FlutterSecureStorage>();
-  ProfileStateStatus _stateStatus = ProfileStateStatus.loading;
   @override
   void initState() {
     super.initState();
@@ -46,20 +45,14 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: BlocListener<AuthBloc, ProfileState>(
         listener: (context, state) {
-          setState(() => _stateStatus = state.status);
-
-          if (
-              // state is ProfileStateEmpty
-              state.status == ProfileStateStatus.initial) {
+          if (state.status == ProfileStateStatus.initial) {
             Navigator.of(context).pushReplacementNamed(Routes.signUp);
           } else if (state.status == ProfileStateStatus.success &&
               state.getProfile != null &&
-              // state is ProfileStateHasData &&
               state.getProfile!.userId.isEmpty) {
             context.read<AuthBloc>().add(const OnGetUser());
           } else if (state.status == ProfileStateStatus.success &&
               state.getProfile != null &&
-              // state is ProfileStateHasData &&
               state.getProfile!.userId.isNotEmpty) {
             Navigator.of(context).pushReplacementNamed(Routes.homeScreen);
           }
@@ -69,7 +62,15 @@ class _SplashScreenState extends State<SplashScreen> {
             const Center(
               child: Text('Best app for save phone memmory'),
             ),
-            if (_stateStatus == ProfileStateStatus.loading) const ApiLoader(),
+            BlocBuilder<AuthBloc, ProfileState>(
+              builder: (context, state) {
+                if (state.status == ProfileStateStatus.loading) {
+                  return const ApiLoader();
+                } else {
+                  return const SizedBox();
+                }
+              },
+            ),
           ],
         ),
       ),
